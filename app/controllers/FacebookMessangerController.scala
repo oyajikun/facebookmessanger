@@ -2,22 +2,19 @@ package controllers
 
 import javax.inject._
 
+import json.Messaging
 import play.api.Logger
+import play.api.data.validation.ValidationError
+import play.api.libs.json._
 import play.api.mvc._
+import services.MessageQueue
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class FacebookMessangerController @Inject() extends Controller {
-
-  /**
-   * Create an Action to render an HTML page with a welcome message.
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
+class FacebookMessangerController @Inject() (messageQueue: MessageQueue) extends Controller {
   def webhook = Action { request =>
     Logger.debug(request.queryString.toString)
     (request.getQueryString("hub.mode"), request.getQueryString("hub.verify_token")) match {
@@ -31,7 +28,18 @@ class FacebookMessangerController @Inject() extends Controller {
   }
 
   def receivedMessage = Action(parse.json) { request =>
-    Logger.debug(request.body.toString)
+    Logger.debug(Json.prettyPrint(request.body))
+
+    val jsResult = request.body.validate[json.Data]
+    Logger.debug(jsResult.toString)
+    val data = jsResult.get
+    for {
+      entry <- data.entry
+      messaging <- entry.messaging
+    } {
+      messageQueue.enqueue(messaging)
+    }
+
     Ok
   }
 }
