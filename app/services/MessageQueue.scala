@@ -1,5 +1,7 @@
 package services
 
+import javax.inject.Singleton
+
 import json.Messaging
 
 import scala.collection.mutable.Queue
@@ -14,6 +16,7 @@ trait MessageQueue {
   def dequeue(): Option[Messaging]
 }
 
+@Singleton
 class FacebookMessengerMessageQueue extends MessageQueue {
   private val queue = new Queue[Messaging]
 
