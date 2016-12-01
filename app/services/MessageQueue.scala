@@ -14,6 +14,8 @@ trait MessageQueue {
   def enqueue(t: Messaging): Unit
 
   def dequeue(): Option[Messaging]
+
+  def length(): Int
 }
 
 @Singleton
@@ -27,4 +29,6 @@ class FacebookMessengerMessageQueue extends MessageQueue {
   override def dequeue(): Option[Messaging] = {
     allCatch opt queue.dequeue()
   }
+
+  override def length(): Int = queue.length
 }
