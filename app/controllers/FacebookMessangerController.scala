@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import play.api.Logger
+import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.mvc._
 import services.MessageQueue
@@ -12,11 +12,12 @@ import services.MessageQueue
   * application's home page.
   */
 @Singleton
-class FacebookMessangerController @Inject()(messageQueue: MessageQueue) extends Controller {
+class FacebookMessangerController @Inject()(messageQueue: MessageQueue, configuration: Configuration) extends Controller {
   def webhook = Action { request =>
     Logger.debug(request.queryString.toString)
+    val pageToken = configuration.getString("facebookmessanger.pageToken").getOrElse("unknown_page_token")
     (request.getQueryString("hub.mode"), request.getQueryString("hub.verify_token")) match {
-      case (Some("subscribe"), Some("mychatbot")) =>
+      case (Some("subscribe"), Some(pageToken)) =>
         Logger.debug("Validating webhook")
         Ok(request.getQueryString("hub.challenge").getOrElse(""))
       case _ =>
