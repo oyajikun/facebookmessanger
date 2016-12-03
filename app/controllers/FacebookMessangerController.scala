@@ -38,7 +38,7 @@ class FacebookMessangerController @Inject()(messageQueue: MessageQueue, configur
       Ok
     }.recoverTotal { e =>
       Logger.error(JsError.toJson(e).toString)
-      Ok
+      InternalServerError
     }
   }
 }
