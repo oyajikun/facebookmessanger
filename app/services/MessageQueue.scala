@@ -13,7 +13,7 @@ import scala.util.control.Exception._
 trait MessageQueue {
   def enqueue(t: Messaging): Unit
 
-  def dequeue(): Option[Messaging]
+  def dequeueAll(): Seq[Messaging]
 
   def length(): Int
 }
@@ -26,8 +26,8 @@ class FacebookMessengerMessageQueue extends MessageQueue {
     queue.enqueue(t)
   }
 
-  override def dequeue(): Option[Messaging] = {
-    allCatch opt queue.dequeue()
+  override def dequeueAll(): Seq[Messaging] = {
+    queue.dequeueAll(_ => true)
   }
 
   override def length(): Int = queue.length
