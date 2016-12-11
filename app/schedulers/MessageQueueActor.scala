@@ -43,7 +43,7 @@ class MessageQueueActor @Inject()(messageQueue: MessageQueue, wsClient: WSClient
     Logger.debug(Json.prettyPrint(json))
     val pageAccessToken = configuration.getString("facebookmessanger.pageAccessToken").getOrElse("unknown_page_access_token")
     val recipient = Json.obj("id" -> messaging.sender.id)
-    val message = Json.obj("text" -> messaging.message.text)
+    val message = Json.obj("text" -> messaging.message.text.getOrElse[String]("recieved non text message"))
     val data = Json.obj(
       "recipient" -> recipient,
       "message" -> message
