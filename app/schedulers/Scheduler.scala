@@ -12,6 +12,6 @@ import scala.concurrent.duration._
   */
 class Scheduler @Inject()(val system: ActorSystem, @Named("message-queue-actor") val messageQueueActor: ActorRef)(implicit ec: ExecutionContext) {
   system.scheduler.schedule(
-    0.microseconds, 5.seconds, messageQueueActor, "handle")
+    0.microseconds, 1.seconds, messageQueueActor, "handle")
 }
 
