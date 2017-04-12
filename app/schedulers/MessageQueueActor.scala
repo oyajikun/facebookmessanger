@@ -3,8 +3,8 @@ package schedulers
 import akka.actor.Actor
 import javax.inject.Inject
 
-import json.Messaging
-import json.Messaging._
+import json.facebookmessanger.Messaging._
+import json.facebookmessanger.Messaging
 import play.api.{Configuration, Logger}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json

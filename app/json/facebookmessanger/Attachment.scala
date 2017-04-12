@@ -1,7 +1,7 @@
-package json
+package json.facebookmessanger
 
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 /**
   * Created by tomoya.igarashi on 2016/12/11.

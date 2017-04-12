@@ -2,7 +2,7 @@ package services
 
 import javax.inject.Singleton
 
-import json.Messaging
+import json.facebookmessanger.Messaging
 
 import scala.collection.mutable.Queue
 import scala.util.control.Exception._

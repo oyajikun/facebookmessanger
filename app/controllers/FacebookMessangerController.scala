@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 
+import json.facebookmessanger.Data
 import play.api.{Configuration, Logger}
 import play.api.libs.json._
 import play.api.mvc._
@@ -28,7 +29,7 @@ class FacebookMessangerController @Inject()(messageQueue: MessageQueue, configur
 
   def receivedMessage = Action(parse.json) { request =>
     Logger.debug(Json.prettyPrint(request.body))
-    request.body.validate[json.Data].map { case data =>
+    request.body.validate[Data].map { case data =>
       for {
         entry <- data.entry
         messaging <- entry.messaging

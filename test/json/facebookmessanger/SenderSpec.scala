@@ -1,4 +1,4 @@
-package json
+package json.facebookmessanger
 
 import org.specs2.mutable._
 import play.api.libs.json.Json

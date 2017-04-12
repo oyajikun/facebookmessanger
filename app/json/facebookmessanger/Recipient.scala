@@ -1,8 +1,8 @@
-package json
+package json.facebookmessanger
 
 import play.api.data.validation.ValidationError
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 /**
   * Created by tomoya.igarashi on 2016/11/25.

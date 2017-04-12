@@ -1,7 +1,7 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
-import json.Messaging
+import json.facebookmessanger.Messaging
 import services._
 
 /**
