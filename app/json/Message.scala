@@ -14,13 +14,9 @@ case class Message(
                     attachments: Option[Seq[Attachment]])
 
 object Message {
-  val r1 = """(\Amid\.\d+:\w+\z)""".r
-  val v1 = Reads.StringReads.filter(ValidationError("json.message.mid.invalid_format")) { s =>
-    s match {
-      case r1(_) => true
-      case _ => false
-    }
-  }
+  val r1 = """\Amid\.\$[\s\S]+\z""".r
+  val e1 = ValidationError("json.message.mid.invalid_format")
+  val v1 = Reads.StringReads.filter(e1)(r1.findFirstIn(_).nonEmpty)
   implicit val messageFormat: Format[Message] = (
     (__ \ "mid").format[String](v1) and
       (__ \ "seq").format[Int] and
