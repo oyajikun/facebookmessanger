@@ -7,7 +7,11 @@ import play.api.libs.functional.syntax._
 /**
   * Created by tomoya.igarashi on 2016/11/25.
   */
-case class Message(mid: String, seq: Int, text: Option[String], attachments: Seq[Attachment])
+case class Message(
+                    mid: String,
+                    seq: Int,
+                    text: Option[String],
+                    attachments: Option[Seq[Attachment]])
 
 object Message {
   val r1 = """(\Amid\.\d+:\w+\z)""".r
@@ -21,6 +25,6 @@ object Message {
     (__ \ "mid").format[String](v1) and
       (__ \ "seq").format[Int] and
       (__ \ "text").formatNullable[String] and
-      (__ \ "attachments").format[Seq[Attachment]]
+      (__ \ "attachments").formatNullable[Seq[Attachment]]
     ) (Message.apply, unlift(Message.unapply))
 }
