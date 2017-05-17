@@ -76,7 +76,38 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
       println(xs.sum)
       Ok("futures")
     }*/
-    val xs = (1 to 8).map { i =>
+    /*    val xs = (1 to 8).map { i =>
+          Future {
+            val start = new java.util.Date()
+            println(s"[${Thread.currentThread().getName}]:start ${start}")
+            Thread.sleep(2000)
+            val end = new java.util.Date()
+            println(s"[${Thread.currentThread().getName}]:end   ${end}")
+            i
+          }
+        }
+        val ef1 = Future {
+          Thread.sleep(1000)
+          throw new RuntimeException("hogehoge")
+          1
+        }
+        val ys = ef1 +: xs
+        val fs3 = Future.sequence(ys)
+        // TODO: fs3の結果を受けて次のFutureを実行する実験
+        val f1 = for { // parallel
+          xs <- fs3
+        } yield {
+          println(xs.sum)
+          Ok("futures")
+        }
+        f1.recover {
+          case e => {
+            println(e)
+            BadRequest(e.getMessage)
+          }
+        }
+      }*/
+    val xs = (1 to 4).map { i =>
       Future {
         val start = new java.util.Date()
         println(s"[${Thread.currentThread().getName}]:start ${start}")
@@ -86,21 +117,32 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
         i
       }
     }
-    val ef1 = Future {
-      Thread.sleep(1000)
-      throw new RuntimeException("hogehoge")
-      1
-    }
-    val ys = ef1 +: xs
-    val fs3 = Future.sequence(ys)
-    // TODO: fs3の結果を受けて次のFutureを実行する実験
+    val fs3 = Future.sequence(xs)
     val f1 = for { // parallel
       xs <- fs3
+    } yield {
+      val sum = xs.sum
+      val ys = (1 to 4).map { i =>
+        Future {
+          val start = new java.util.Date()
+          println(s"[${Thread.currentThread().getName}]:start ${start}")
+          Thread.sleep(2000)
+          val end = new java.util.Date()
+          println(s"[${Thread.currentThread().getName}]:end   ${end}")
+          i + sum
+        }
+      }
+      val fs4 = Future.sequence(ys)
+      fs4
+    }
+    val f2 = for { //parallel
+      fs <- f1
+      xs <- fs
     } yield {
       println(xs.sum)
       Ok("futures")
     }
-    f1.recover {
+    f2.recover {
       case e => {
         println(e)
         BadRequest(e.getMessage)
