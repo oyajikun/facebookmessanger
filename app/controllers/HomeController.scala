@@ -28,7 +28,8 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
   }
 
   def futures = Action.async {
-/*    val f1 = Future {
+    /*
+    val f1 = Future {
       val start = new java.util.Date()
       println(s"[${Thread.currentThread().getName}]:start ${start}")
       Thread.sleep(2000)
@@ -51,6 +52,7 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
       println(x + y)
       Ok("futures")
     }
+
     val fs1 = Future.sequence(Seq(f1, f2))
     for { // parallel
       xs <- fs1
@@ -58,6 +60,7 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
       println(xs.sum)
       Ok("futures")
     }
+
     val fs1 = Future {
       for {
         i <- (1 to 2)
@@ -75,39 +78,40 @@ class HomeController @Inject()(actorSystem: ActorSystem) extends Controller {
     } yield {
       println(xs.sum)
       Ok("futures")
-    }*/
-    /*    val xs = (1 to 8).map { i =>
-          Future {
-            val start = new java.util.Date()
-            println(s"[${Thread.currentThread().getName}]:start ${start}")
-            Thread.sleep(2000)
-            val end = new java.util.Date()
-            println(s"[${Thread.currentThread().getName}]:end   ${end}")
-            i
-          }
-        }
-        val ef1 = Future {
-          Thread.sleep(1000)
-          throw new RuntimeException("hogehoge")
-          1
-        }
-        val ys = ef1 +: xs
-        val fs3 = Future.sequence(ys)
-        // TODO: fs3の結果を受けて次のFutureを実行する実験
-        val f1 = for { // parallel
-          xs <- fs3
-        } yield {
-          println(xs.sum)
-          Ok("futures")
-        }
-        f1.recover {
-          case e => {
-            println(e)
-            BadRequest(e.getMessage)
-          }
-        }
-      }*/
+    }
+    val xs = (1 to 8).map { i =>
+      Future {
+        val start = new java.util.Date()
+        println(s"[${Thread.currentThread().getName}]:start ${start}")
+        Thread.sleep(2000)
+        val end = new java.util.Date()
+        println(s"[${Thread.currentThread().getName}]:end   ${end}")
+        i
+      }
+    }
+    val ef1 = Future {
+      Thread.sleep(1000)
+      throw new RuntimeException("hogehoge")
+      1
+    }
+    val ys = ef1 +: xs
+    val fs3 = Future.sequence(ys)
+    // TODO: fs3の結果を受けて次のFutureを実行する実験
+    val f1 = for { // parallel
+      xs <- fs3
+    } yield {
+      println(xs.sum)
+      Ok("futures")
+    }
+    f1.recover {
+      case e => {
+        println(e)
+        BadRequest(e.getMessage)
+      }
+    }
+    */
     val xs = (1 to 4).map { i =>
+      // この段階で処理がスタートする。
       Future {
         val start = new java.util.Date()
         println(s"[${Thread.currentThread().getName}]:start ${start}")
